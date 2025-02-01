@@ -30,7 +30,7 @@ This is a **real-time chat application** built with **Node.js**, **TypeScript**,
 - OpenAI API key (sign up at [OpenAI](https://openai.com/api/))
 
 ### Project Structure
-```bash
+```
 - real-time-chat-app/
 ├── backend/                  # Backend code
 │   ├── src/                  # Source files
@@ -48,4 +48,18 @@ This is a **real-time chat application** built with **Node.js**, **TypeScript**,
 │   ├── package.json          # Frontend dependencies
 │   └── tsconfig.json         # TypeScript configuration
 └── README.md                 # Project documentation
+```
+
+### Roadmap
+- Set up the backend with Express and Socket.io.
+
+- Implement real-time messaging.
+
+- Integrate OpenAI moderation.
+
+- Save chat history to a database.
+
+- Build the frontend with React.
+
+- Deploy the app to Vercel and Render/Heroku.
 
