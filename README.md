@@ -30,7 +30,7 @@ This is a **real-time chat application** built with **Node.js**, **TypeScript**,
 - OpenAI API key (sign up at [OpenAI](https://openai.com/api/))
 
 ### Project Structure
-'''bash
+```bash
 - real-time-chat-app/
 ├── backend/                  # Backend code
 │   ├── src/                  # Source files
