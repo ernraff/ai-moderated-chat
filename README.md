@@ -1,7 +1,7 @@
 # Real-Time Chat App with AI Moderation
 
 ## Overview
-This is a **real-time chat application** built with **Node.js**, **TypeScript**, **React**, and **Socket.io**. The app allows users to send and receive messages in real-time, with AI-powered moderation to filter out inappropriate content using the **OpenAI API**. Chat history is saved to a database for future reference.
+This is a **real-time chat application** built with **Node.js**, **Next.js**, **JavaScript**, **React**, and **Socket.io**. The app allows users to send and receive messages in real-time, with AI-powered moderation to filter out inappropriate content using the **OpenAI API**. Chat history is saved to a database for future reference.
 
 ---
 
