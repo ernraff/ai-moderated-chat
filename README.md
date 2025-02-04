@@ -36,29 +36,15 @@ cd realtime-chat-ai
 ```
 **Install dependencies
 ```sh
-npm install #or yarn install
+npm install # or yarn install
 ```
-or
-```
-yarn install
-```
-
 **Start the backend server
 ```
-npm run server
+npm run server # or yarn server
 ```
-or
-```
-yarn server
-```
-
 **Start the frontend
 ```
-npm run dev
-```
-or
-```
-yarn dev
+npm run dev # or yarn dev
 ```
 
 ## Usage
