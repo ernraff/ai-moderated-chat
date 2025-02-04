@@ -14,12 +14,10 @@ This is a **real-time chat application** built with **Node.js**, **TypeScript**,
 ---
 
 ## Tech Stack
-- **Frontend**: React, TypeScript
-- **Backend**: Node.js, Express, Socket.io, TypeScript
-- **Database**: MongoDB (or SQLite for simplicity)
+- **Frontend**: Next.js (React, JavaScript)
+- **Backend**: Node.js, Express, Socket.io, JavaScript
+- **Database**: MongoDB
 - **AI Integration**: OpenAI API
-- **Deployment**: Vercel (frontend), Render/Heroku (backend)
-
 ---
 
 ## Getting Started
@@ -28,27 +26,6 @@ This is a **real-time chat application** built with **Node.js**, **TypeScript**,
 - Node.js (v16 or higher)
 - npm or yarn
 - OpenAI API key (sign up at [OpenAI](https://openai.com/api/))
-
-### Project Structure
-```
-- real-time-chat-app/
-├── backend/                  # Backend code
-│   ├── src/                  # Source files
-│   │   ├── server.ts         # Express server with Socket.io
-│   │   ├── openai.ts         # OpenAI moderation logic
-│   │   └── db.ts            # Database connection and models
-│   ├── .env                  # Environment variables
-│   ├── package.json          # Backend dependencies
-│   └── tsconfig.json         # TypeScript configuration
-├── frontend/                 # Frontend code
-│   ├── src/                  # Source files
-│   │   ├── components/       # React components
-│   │   ├── App.tsx           # Main React component
-│   │   └── index.tsx         # Entry point
-│   ├── package.json          # Frontend dependencies
-│   └── tsconfig.json         # TypeScript configuration
-└── README.md                 # Project documentation
-```
 
 ### Roadmap
 - Set up the backend with Express and Socket.io.
