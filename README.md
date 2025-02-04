@@ -21,30 +21,26 @@ This is a real-time chat application built with Node.js, Next.js, JavaScript, Re
 - **[npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)** - To manage dependencies
 - **[OpenAI API key](https://openai.com/)** - Required for AI moderation
 
-## Roadmap
-1. **Set up the backend** with Express and Socket.io.
-2. **Implement real-time messaging** using WebSockets.
-3. **Integrate OpenAI moderation** for filtering inappropriate content.
-4. **Save chat history** to a MongoDB database.
-5. **Build the frontend** using Next.js and React.
-
 ## Installation
-**Clone the repository
+### Clone the repository
 ```sh
 git clone https://github.com/yourusername/realtime-chat-ai.git
 cd realtime-chat-ai
 ```
-**Install dependencies
+
+### Install dependencies
 ```sh
-npm install # or yarn install
+npm install  # or yarn install
 ```
-**Start the backend server
+
+### Start the backend server
+```sh
+npm run server  # or yarn server
 ```
-npm run server # or yarn server
-```
-**Start the frontend
-```
-npm run dev # or yarn dev
+
+### Start the frontend
+```sh
+npm run dev  # or yarn dev
 ```
 
 ## Usage
@@ -53,4 +49,3 @@ npm run dev # or yarn dev
 3. Messages are checked using AI moderation before being broadcasted.
 4. Flagged messages notify the sender without being broadcast.
 5. Chat history is stored for persistence.
-
