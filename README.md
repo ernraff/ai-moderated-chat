@@ -36,7 +36,7 @@ cd realtime-chat-ai
 ```
 **Install dependencies
 ```sh
-npm install
+npm install #or yarn install
 ```
 or
 ```
