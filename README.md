@@ -29,12 +29,12 @@ This is a real-time chat application built with Node.js, Next.js, JavaScript, Re
 5. **Build the frontend** using Next.js and React.
 
 ## Installation
-*Clone the repository
+**Clone the repository
 ```sh
 git clone https://github.com/yourusername/realtime-chat-ai.git
 cd realtime-chat-ai
 ```
-*Install dependencies
+**Install dependencies
 ```sh
 npm install
 ```
@@ -43,7 +43,7 @@ or
 yarn install
 ```
 
-*Start the backend server
+**Start the backend server
 ```
 npm run server
 ```
@@ -52,7 +52,7 @@ or
 yarn server
 ```
 
-*Start the frontend
+**Start the frontend
 ```
 npm run dev
 ```
