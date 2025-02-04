@@ -51,13 +51,3 @@ npm run dev  # or yarn dev
 4. Flagged messages notify the sender without being broadcast.
 5. Chat history is stored for persistence.
 
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
----
-
-🚀 Happy coding!
-
