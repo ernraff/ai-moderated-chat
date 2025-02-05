@@ -60,3 +60,9 @@ npm run dev  # or yarn dev
 3. Messages are checked using AI moderation before being broadcasted.
 4. Flagged messages notify the sender without being broadcast.
 5. Chat history is stored for persistence. Upon joining the chat, new users will see chat history.
+
+## Next Steps
+
+- Implement login feature with OAuth
+- Give users ability to join multiple chat rooms
+- Persist chat history across sessions
