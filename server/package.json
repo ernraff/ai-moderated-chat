@@ -12,7 +12,10 @@
   "dependencies": {
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+<<<<<<< HEAD
     "mongoose": "^8.9.7",
+=======
+>>>>>>> b98710cd950c695db1b6f15f194e74cfbc6accd5
     "nodemon": "^3.1.9",
     "openai": "^4.82.0",
     "socket.io": "^4.8.1"

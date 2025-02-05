@@ -16,14 +16,6 @@ const Inputs = ({ user, socket, setChat }) => {
     }
   };
 
-  const userTyping = (e) => {
-    setInput(e.target.value);
-    socket.emit("user_typing", {
-      user: user.name,
-      typing: e.target.value ? true : false,
-    });
-  };
-
   return (
     <div className="w-full absolute bottom-0 text-xl grid grid-cols-5 gradient md:bg-none md:text-3xl md:flex md:justify-center md:relative">
       <input
@@ -31,7 +23,6 @@ const Inputs = ({ user, socket, setChat }) => {
         type="text"
         placeholder="Enter your message"
         value={input}
-        onChange={(e) => userTyping(e)}
         onKeyDown={(e) => e.key === "Enter" && sendMessage()}
       />
       <button
