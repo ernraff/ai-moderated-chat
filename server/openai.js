@@ -14,7 +14,7 @@ async function moderateMessage(message) {
       input: message,
     });
 
-    console.log(response);
+    // console.log(response);
 
     return response.results[0].flagged; // Returns `true` if inappropriate, `false` otherwise
   } catch (error) {
