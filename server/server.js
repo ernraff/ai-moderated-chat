@@ -1,5 +1,7 @@
 const db = require("./mongoDB/connection"); // Import MongoDB connection
 const Message = require("./models/messageModel"); // Import the Message model
+const User = require("./models/userModel");
+const userRoutes = require("./routes/userRoutes");
 
 const moderator = require("./openai");
 
@@ -9,14 +11,28 @@ const http = require("http");
 const app = express();
 const server = http.createServer(app);
 
+app.use(express.json());
+app.use("/users", userRoutes);
+
 const clearMessages = async () => {
   try {
     await Message.deleteMany({}); // Deletes all documents in the messages collection
     console.log("All messages cleared from the database.");
   } catch (error) {
-    console.error("❌ Error deleting messages:", error);
+    console.error("Error deleting messages:", error);
   }
 };
+
+const clearUsers = async () => {
+  try {
+    await User.deleteMany({}); // Deletes all documents in the messages collection
+    console.log("All users cleared from the database.");
+  } catch (error) {
+    console.error("Error deleting messages:", error);
+  }
+};
+
+// clearUsers();
 
 clearMessages(); //ensure no messages remain from last chat session
 

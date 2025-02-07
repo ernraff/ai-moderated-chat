@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 
 const messageSchema = new mongoose.Schema({
-  sender: String, //socket id of user who sent message
-  content: String, //messagte content
+  sender: String, //username of user who sent message
+  content: String, //message
   type: String,
   timestamp: { type: Date, default: Date.now },
 });
