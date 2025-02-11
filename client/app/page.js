@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
-import { Chat, Inputs, SignUp } from "@/components";
+import { Chat, Inputs, SignUp, Login } from "@/components";
 import { io } from "socket.io-client";
 
 const socket = io("http://localhost:3001");
@@ -8,6 +8,7 @@ const socket = io("http://localhost:3001");
 export default function Home() {
   const [chat, setChat] = useState([]);
   const [username, setUsername] = useState("");
+  const [showSignUp, setShowSignUp] = useState(false);
 
   const user = useRef(null);
 
@@ -16,7 +17,7 @@ export default function Home() {
       if (!user.current) return;
       console.log("Loading messages...");
       // upon connection, set chat state with loaded messages
-      if (newUser.id === user.current.id) {
+      if (newUser.username === user.current.username) {
         const response = await fetch("http://localhost:3001/messages", {
           method: "GET",
           headers: {
@@ -81,12 +82,21 @@ export default function Home() {
           <Chat user={user.current} chat={chat} />
           <Inputs setChat={setChat} user={user.current} socket={socket} />
         </>
-      ) : (
+      ) : showSignUp ? ( // Toggle between SignUp and Login
         <SignUp
           user={user}
           socket={socket}
           username={username}
           setUsername={setUsername}
+          setShowSignUp={setShowSignUp} // Allow switching to Login
+        />
+      ) : (
+        <Login
+          user={user}
+          socket={socket}
+          username={username}
+          setUsername={setUsername}
+          setShowSignUp={setShowSignUp} // Allow switching to SignUp
         />
       )}
     </main>
