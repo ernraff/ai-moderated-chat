@@ -22,11 +22,12 @@ const Login = ({ user, socket, username, setUsername, setShowSignUp }) => {
         return;
       }
 
-      // Set logged-in user
+      console.log("Login successful:", data);
+      localStorage.setItem("token", data.token); // Save JWT token
+      console.log("token: ", data.token);
       user.current = { username };
       socket.emit("new_user", user.current);
 
-      // Clear input fields
       setUsername("");
       setPassword("");
     } catch (err) {
@@ -69,16 +70,15 @@ const Login = ({ user, socket, username, setUsername, setShowSignUp }) => {
           Login
         </button>
 
-        {/* Button to go to SignUp page */}
-        <p className="text-white text-lg mt-4">
-          Don't have an account?{" "}
+        <div className="text-white text-lg mt-4">
+          <span>Don't have an account? </span>
           <button
             className="text-sky-300 underline"
             onClick={() => setShowSignUp(true)}
           >
             Sign Up
           </button>
-        </p>
+        </div>
       </div>
     </div>
   );

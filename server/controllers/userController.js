@@ -1,5 +1,14 @@
+require("dotenv").config();
 const bcrypt = require("bcrypt");
-const User = require("../models/userModel"); //import user model
+const jwt = require("jsonwebtoken");
+const User = require("../models/userModel");
+
+const SECRET_KEY = process.env.JWT_SECRET;
+
+// Ensure SECRET_KEY is defined
+if (!SECRET_KEY) {
+  throw new Error("Missing JWT_SECRET in .env file");
+}
 
 // Get all users
 const getUsers = async (req, res) => {
@@ -7,13 +16,14 @@ const getUsers = async (req, res) => {
     const users = await User.find({}, { username: 1 });
     res.json(users);
   } catch (error) {
-    res.status(500).json({ error: "Error retrieving users" });
+    console.error("Error retrieving users:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
-// Register a new user
+// Register a new user and generate a token
 const registerUser = async (req, res) => {
-  console.log("Incoming request:", req.body); // Log request body
+  console.log("Incoming request:", req.body);
 
   const { username, password } = req.body;
   if (!username || !password) {
@@ -21,32 +31,33 @@ const registerUser = async (req, res) => {
   }
 
   try {
-    // Check if username already exists
     const existingUser = await User.findOne({ username });
-    // console.log("Existing user check result:", existingUser);
-
     if (existingUser) {
       return res.status(400).json({ error: "Username already taken" });
     }
 
-    // Hash password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log("Generated hashed password:", hashedPassword); // Log hashed password
 
-    // Save new user
     const newUser = new User({
       username,
       password: hashedPassword,
     });
     await newUser.save();
 
-    console.log("User registered successfully:", newUser);
-    res.status(200).json({ message: "User registered successfully" });
+    // Generate JWT token
+    const token = jwt.sign(
+      { username: newUser.username, id: newUser._id },
+      SECRET_KEY,
+      { expiresIn: "1h" }
+    );
+
+    res.status(201).json({ message: "User registered successfully", token });
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("Registration error:", error); // Internal logging
+    res.status(500).json({ error: "Internal server error" });
   }
 };
-/// User login
+
 const loginUser = async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -63,11 +74,19 @@ const loginUser = async (req, res) => {
       return res.status(400).json({ error: "Incorrect password" });
     }
 
-    res.status(200).json({ message: "Login successful" });
+    // Generate JWT token
+    const token = jwt.sign(
+      { username: user.username, id: user._id },
+      SECRET_KEY,
+      { expiresIn: "1h" }
+    );
+
+    res.status(200).json({ message: "Login successful", token });
   } catch (error) {
-    console.error("Error during login:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("Login error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
-module.exports = { getUsers, registerUser, loginUser };
+// Export all necessary functions
+module.exports = { registerUser, getUsers, loginUser };

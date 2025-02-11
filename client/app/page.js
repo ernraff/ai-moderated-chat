@@ -3,44 +3,65 @@ import { useEffect, useState, useRef } from "react";
 import { Chat, Inputs, SignUp, Login } from "@/components";
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:3001");
-
 export default function Home() {
   const [chat, setChat] = useState([]);
   const [username, setUsername] = useState("");
   const [showSignUp, setShowSignUp] = useState(false);
+  const [isClient, setIsClient] = useState(false); // Ensures only client-side rendering
+  const [socket, setSocket] = useState(null); // Prevents SSR execution
 
   const user = useRef(null);
 
+  // Ensure component only renders on the client
   useEffect(() => {
-    socket.on("load_messages", async (newUser) => {
+    setIsClient(true);
+  }, []);
+
+  // Initialize socket only on client
+  useEffect(() => {
+    if (!isClient) return;
+
+    const newSocket = io("http://localhost:3001");
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.disconnect(); // Clean up socket on unmount
+    };
+  }, [isClient]);
+
+  // Handle incoming socket events
+  useEffect(() => {
+    if (!socket) return;
+
+    const loadMessages = async (newUser) => {
       if (!user.current) return;
       console.log("Loading messages...");
-      // upon connection, set chat state with loaded messages
+
       if (newUser.username === user.current.username) {
-        const response = await fetch("http://localhost:3001/messages", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        try {
+          const token = localStorage.getItem("token"); // Retrieve token
+          const response = await fetch("http://localhost:3001/messages", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`, // Attach JWT token
+            },
+          });
 
-        const data = await response.json();
-
-        if (!response.ok) {
-          alert(data.error);
-          return;
+          const data = await response.json();
+          if (!response.ok) {
+            alert(data.error);
+            return;
+          }
+          setChat(data.messages);
+        } catch (error) {
+          console.error("Error loading messages:", error);
         }
-
-        const messages = data.messages;
-
-        setChat(messages);
-        // console.log("Chat: ", chat);
       }
-    });
-    // console.log(chat);
+    };
+
+    socket.on("load_messages", loadMessages);
     socket.on("receive_message", (msg) => {
-      // console.log(msg.user);
       if (!user.current) return;
       setChat((prev) => [...prev, msg]);
     });
@@ -55,12 +76,11 @@ export default function Home() {
 
     socket.on("flag_message", (flaggedUser) => {
       if (!user.current) return;
-      // console.log(flaggedUser);
       if (flaggedUser.username === user.current.username) {
         setChat((prev) => [
           ...prev,
           {
-            content: `Your message was flagged for inappropriate content.  Message not sent.`,
+            content: `Your message was flagged for inappropriate content. Message not sent.`,
             type: "warning",
           },
         ]);
@@ -68,27 +88,30 @@ export default function Home() {
     });
 
     return () => {
-      socket.off("load_messages");
+      socket.off("load_messages", loadMessages);
       socket.off("receive_message");
       socket.off("new_user");
       socket.off("flag_message");
     };
-  });
+  }, [socket]);
+
+  // Prevents hydration error by returning nothing until mounted
+  if (!isClient) return null;
 
   return (
-    <main className="h-screen max-h-screeen max-w-screen mx-auto md:container md:p-20 md:pt-4">
+    <main className="h-screen max-h-screen max-w-screen mx-auto md:container md:p-20 md:pt-4">
       {user.current ? (
         <>
           <Chat user={user.current} chat={chat} />
           <Inputs setChat={setChat} user={user.current} socket={socket} />
         </>
-      ) : showSignUp ? ( // Toggle between SignUp and Login
+      ) : showSignUp ? (
         <SignUp
           user={user}
           socket={socket}
           username={username}
           setUsername={setUsername}
-          setShowSignUp={setShowSignUp} // Allow switching to Login
+          setShowSignUp={setShowSignUp}
         />
       ) : (
         <Login
@@ -96,7 +119,7 @@ export default function Home() {
           socket={socket}
           username={username}
           setUsername={setUsername}
-          setShowSignUp={setShowSignUp} // Allow switching to SignUp
+          setShowSignUp={setShowSignUp}
         />
       )}
     </main>

@@ -6,8 +6,10 @@ const {
   loginUser,
 } = require("../controllers/userController");
 
+const verifyToken = require("../middleware/authMiddleware");
+
 // Routes
-router.get("/", getUsers);
+router.get("/", verifyToken, getUsers);
 router.post("/signup", registerUser);
 router.post("/login", loginUser);
 

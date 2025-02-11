@@ -19,9 +19,9 @@ const cors = require("cors");
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type"],
+    origin: "http://localhost:3000", // Allow frontend origin
+    methods: ["GET", "POST"], // Allowed HTTP methods
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
