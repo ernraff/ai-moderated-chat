@@ -13,31 +13,39 @@ const getUsers = async (req, res) => {
 
 // Register a new user
 const registerUser = async (req, res) => {
+  console.log("Incoming request:", req.body); // Log request body
+
+  const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ error: "Username and password required" });
+  }
+
   try {
     // Check if username already exists
-    const existingUser = await User.findOne({ username: req.body.username });
+    const existingUser = await User.findOne({ username });
+    // console.log("Existing user check result:", existingUser);
+
     if (existingUser) {
       return res.status(400).json({ error: "Username already taken" });
     }
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    console.log("Hashed password:", hashedPassword);
+    // Hash password before saving
+    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("Generated hashed password:", hashedPassword); // Log hashed password
 
-    // Create and save user in MongoDB
+    // Save new user
     const newUser = new User({
-      username: req.body.username,
+      username,
       password: hashedPassword,
     });
     await newUser.save();
 
-    res.status(201).json({ message: "User registered successfully" });
+    console.log("User registered successfully:", newUser);
+    res.status(200).json({ message: "User registered successfully" });
   } catch (error) {
-    console.error("Error registering user:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
 /// User login
 const loginUser = async (req, res) => {
   try {

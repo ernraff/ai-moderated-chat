@@ -7,24 +7,39 @@ const socket = io("http://localhost:3001");
 
 export default function Home() {
   const [chat, setChat] = useState([]);
-  const [input, setInput] = useState("");
+  const [username, setUsername] = useState("");
 
   const user = useRef(null);
 
   useEffect(() => {
-    socket.on("load_messages", (newUser, messages) => {
+    socket.on("load_messages", async (newUser) => {
       if (!user.current) return;
       console.log("Loading messages...");
       // upon connection, set chat state with loaded messages
       if (newUser.id === user.current.id) {
-        // console.log("Messages: ", messages);
+        const response = await fetch("http://localhost:3001/messages", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          alert(data.error);
+          return;
+        }
+
+        const messages = data.messages;
+
         setChat(messages);
         // console.log("Chat: ", chat);
       }
     });
     // console.log(chat);
-
     socket.on("receive_message", (msg) => {
+      // console.log(msg.user);
       if (!user.current) return;
       setChat((prev) => [...prev, msg]);
     });
@@ -33,14 +48,14 @@ export default function Home() {
       if (!user.current) return;
       setChat((prev) => [
         ...prev,
-        { content: `${newUser.name} joined`, type: "server" },
+        { content: `${newUser.username} joined`, type: "server" },
       ]);
     });
 
     socket.on("flag_message", (flaggedUser) => {
       if (!user.current) return;
-      console.log(flaggedUser);
-      if (flaggedUser.id === user.current.id) {
+      // console.log(flaggedUser);
+      if (flaggedUser.username === user.current.username) {
         setChat((prev) => [
           ...prev,
           {
@@ -67,7 +82,12 @@ export default function Home() {
           <Inputs setChat={setChat} user={user.current} socket={socket} />
         </>
       ) : (
-        <SignUp user={user} socket={socket} input={input} setInput={setInput} />
+        <SignUp
+          user={user}
+          socket={socket}
+          username={username}
+          setUsername={setUsername}
+        />
       )}
     </main>
   );
