@@ -5,7 +5,6 @@ const User = require("../models/userModel");
 
 const SECRET_KEY = process.env.JWT_SECRET;
 
-// Ensure SECRET_KEY is defined
 if (!SECRET_KEY) {
   throw new Error("Missing JWT_SECRET in .env file");
 }
@@ -41,10 +40,11 @@ const registerUser = async (req, res) => {
     const newUser = new User({
       username,
       password: hashedPassword,
+      rooms: [], // Ensure new users start with no rooms
     });
+
     await newUser.save();
 
-    // Generate JWT token
     const token = jwt.sign(
       { username: newUser.username, id: newUser._id },
       SECRET_KEY,
@@ -53,40 +53,41 @@ const registerUser = async (req, res) => {
 
     res.status(201).json({ message: "User registered successfully", token });
   } catch (error) {
-    console.error("Registration error:", error); // Internal logging
+    console.error("Registration error:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
 
+// Login user and return their joined rooms
 const loginUser = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // Find user by username
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ username }).populate("rooms"); // Fetch user and their joined rooms
     if (!user) {
       return res.status(400).json({ error: "Cannot find user" });
     }
 
-    // Compare hashed password
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
       return res.status(400).json({ error: "Incorrect password" });
     }
 
-    // Generate JWT token
     const token = jwt.sign(
       { username: user.username, id: user._id },
       SECRET_KEY,
       { expiresIn: "1h" }
     );
 
-    res.status(200).json({ message: "Login successful", token });
+    res.status(200).json({
+      message: "Login successful",
+      token,
+      rooms: user.rooms, // Return rooms the user is part of
+    });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 };
 
-// Export all necessary functions
 module.exports = { registerUser, getUsers, loginUser };
